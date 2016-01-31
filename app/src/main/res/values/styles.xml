@@ -10,7 +10,7 @@
     <style name="Act_bar" parent="Base.TextAppearance.AppCompat">
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/com_facebook_button_login_silver_background_color</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/Black</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

@@ -4,7 +4,10 @@
     android:layout_height="56dp"
     android:id="@+id/toolbar"
     android:background="@color/colorPrimary"
-   >
+    android:titleTextColor="@color/white"
+    android:subtitleTextColor="@color/colorAccent"
+    style="@style/AppTheme"
+     >
 
 
 </android.support.v7.widget.Toolbar>

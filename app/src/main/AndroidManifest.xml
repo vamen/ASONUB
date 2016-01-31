@@ -8,10 +8,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission
-        android:name="com.vivekbalachandra.asonub.permission.C2D_MESSAGE"
+        android:name="com.example.vivek.asonub.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.vivekbalachandra.asonub.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.example.vivek.asonub.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -41,7 +41,7 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
-                <category android:name="com.vivekbalachandra.gcmusage" />
+                <category android:name="com.example.vivek.asonub" />
             </intent-filter>
         </receiver>
 
@@ -59,6 +59,13 @@
         <activity
             android:name=".CardActivity"
             android:label="@string/title_activity_card"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity android:name=".ChatActvity" >
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
             android:theme="@style/AppTheme" >
         </activity>
     </application>

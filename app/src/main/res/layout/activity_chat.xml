@@ -3,16 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.vivek.asonub.MainActivity"
-    >
-   <ImageView
-       android:fitsSystemWindows="true"
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
-       android:src="@mipmap/ic_launcher"/>
+    tools:context="com.example.vivek.asonub.ChatActvity">
 
-
-
-
+    <include
+        android:id="@+id/chatActbar"
+        layout="@layout/act_bar" />
+    
 
 </RelativeLayout>

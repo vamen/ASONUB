@@ -13,15 +13,25 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
+import com.parse.Parse;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import bolts.Task;
+
 public class MainActivity extends AppCompatActivity implements SplashTransfer{
     public static final String PREF_FILE_NAME="tokenFile";
     public static final String token="Token";
+    public static String parseAid="4j0awpqIk2LGXkjsQpz0nDzVqCvtQTiXmsJBfFDK";
+    public static String parseCk="4qjerGD5QWnBj4Y8xrVadbishgneud2cEMk3B9ae";
+
     Handler handler=new Handler();
     Runnable mRunnable=new Runnable() {
         @Override
         public void run() {
-        Intent cardIntent=new Intent(MainActivity.this,CardActivity.class);
-            startActivity(cardIntent);
+        Intent LogInIntent=new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(LogInIntent);
+            finish();
 
         }
     };
@@ -29,8 +39,13 @@ public class MainActivity extends AppCompatActivity implements SplashTransfer{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Parse.enableLocalDatastore(this);
-        //Parse.initialize(this);
+        Parse.enableLocalDatastore(getApplicationContext());
+
+        Parse.initialize(getApplicationContext(),parseAid,parseCk);
+        //ParseObject parseObject=new ParseObject("testClass");
+        //ParseQuery<ParseObject> objectParseQuery=new ParseQuery<ParseObject>("testClass");
+
+
             if(!isTokenExist()) {
                 ConnectivityManager connectivityManager= (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
                 NetworkInfo info=connectivityManager.getActiveNetworkInfo();
