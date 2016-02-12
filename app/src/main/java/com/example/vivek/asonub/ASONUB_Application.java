@@ -8,7 +8,7 @@ import com.parse.Parse;
 /**
  * Created by Vivek Balachandran on 1/27/2016.
  */
-public class ASONUBapplication extends Application {
+public class ASONUB_Application extends Application {
     public static String RegistrationToken;
     public static String parseAid="4j0awpqIk2LGXkjsQpz0nDzVqCvtQTiXmsJBfFDK";
     public static String parseCk="4qjerGD5QWnBj4Y8xrVadbishgneud2cEMk3B9ae";

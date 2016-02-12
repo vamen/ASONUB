@@ -36,7 +36,7 @@ public class RegistrationTokenService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        InstanceID id=InstanceID.getInstance(this);
+        InstanceID id=InstanceID.getInstance(getApplicationContext());
 
         try {
             Log.d(TAG+"ID", id.getId());

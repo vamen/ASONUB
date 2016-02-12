@@ -1,7 +1,13 @@
 package com.example.vivek.asonub;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.vivek.asonub.Constents.Constents;
 import com.example.vivek.asonub.Fragments.Login;
 import com.parse.FindCallback;
 import com.parse.Parse;
@@ -38,9 +45,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText suserName;
     EditText password;
     EditText spassword;
+    int sem;
+    int branch;
+    NetworkInfo info;
+    ConnectivityManager connectivityManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
 
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -70,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 userName = new EditText(this);
                 userName.setHint("User Name");
                 userName.setHintTextColor(getResources().getColor(R.color.silver));
+                userName.setTextColor(getResources().getColor(R.color.Black));
                 logIns.addView(userName, 0);
                 DisplayMetrics dm = userName.getResources().getDisplayMetrics();
                 LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, convertDpToPx(80, dm));
@@ -77,6 +90,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 password = new EditText(this);
                 password.setHint("password");
                 password.setHintTextColor(getResources().getColor(R.color.silver));
+                password.setTextColor(getResources().getColor(R.color.Black));
                 password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 logIns.addView(password, 1);
                 DisplayMetrics pdm = password.getResources().getDisplayMetrics();
@@ -127,8 +141,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 */break;
 
             case R.id.login:
-                Toast.makeText(getApplicationContext(), "loging in", Toast.LENGTH_LONG).show();
-
+                //Toast.makeText(getApplicationContext(), "loging in", Toast.LENGTH_LONG).show();
+                final ProgressDialog prBuilder=new ProgressDialog(LoginActivity.this);
+                prBuilder.setMessage("Loging in");
+                prBuilder.setCancelable(false);
+                prBuilder.show();
+                info=connectivityManager.getActiveNetworkInfo();
 
                 ParseQuery<ParseObject> parseQuery=ParseQuery.getQuery("testClass");
                 parseQuery.whereEqualTo("username",userName.getText().toString());
@@ -136,14 +154,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 parseQuery.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> objects, ParseException e) {
-                        if(objects.size()==0)
-                        {
+                        if(objects.size()!=0)
+                        {  branch= objects.get(0).getInt("branch");
+                            sem=objects.get(0).getInt("sem");
+                            prBuilder.dismiss();
+                            saveDataLocally(userName.getText().toString(), branch, sem);
                             Intent intent = new Intent(getApplicationContext(), CardActivity.class);
                             startActivity(intent);
+
                         }
                         else
-                        {
-                            AlertDialog.Builder builder=new AlertDialog.Builder(getBaseContext());
+                        {   prBuilder.dismiss();
+                            AlertDialog.Builder builder=new AlertDialog.Builder(LoginActivity.this);
                             builder.setTitle("error !!");
                             builder.setMessage("user name and password not matching");
                             builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
@@ -164,6 +186,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void saveDataLocally(String USN,int branch,int sem) {
+        SharedPreferences saveData = getSharedPreferences(MainActivity.PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = saveData.edit();
+        editor.putString(Constents.NAME, userName.getText().toString());
+        editor.putString(Constents.USN, USN);
+        editor.putInt(Constents.BRANCH, branch);
+        editor.putInt(Constents.SEM, sem);
+        editor.putBoolean(Constents.LOGINSTATUS, true);
+        editor.apply();
+    }
+
     @Override
     public void onBackPressed() {
         if(flag) {
@@ -178,6 +211,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         else
 
             super.onBackPressed();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 
     private int convertDpToPx(int dp, DisplayMetrics displayMetrics) {

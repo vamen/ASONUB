@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">ASONUB</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_card">CardActivity</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="parseAID">4j0awpqIk2LGXkjsQpz0nDzVqCvtQTiXmsJBfFDK</string>
+    <string name="parseCK">4qjerGD5QWnBj4Y8xrVadbishgneud2cEMk3B9ae</string>
 </resources>

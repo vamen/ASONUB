@@ -22,8 +22,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.vivek.asonub.CardActivity;
+import com.example.vivek.asonub.Constents.Constents;
 import com.example.vivek.asonub.MainActivity;
 import com.example.vivek.asonub.R;
+import com.example.vivek.asonub.TopicRegisterService;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -56,13 +58,13 @@ public class Login extends Fragment {
     boolean usnFlag = false;
     boolean both = false;
 
-    Runnable runnable=new Runnable() {
+    Runnable runnable = new Runnable() {
         @Override
         public void run() {
-      localValidateSuccess();
+            localValidateSuccess();
         }
     };
-    Thread uploder=new Thread(runnable);
+    Thread uploder = new Thread(runnable);
 
     public Login() {
         // Required empty public constructor
@@ -76,9 +78,13 @@ public class Login extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_login, container, false);
         USN = (EditText) root.findViewById(R.id.usn);
+        USN.setTextColor(getResources().getColor(R.color.Black));
         Password = (EditText) root.findViewById(R.id.password);
+        Password.setTextColor(getResources().getColor(R.color.Black));
         confirmPassword = (EditText) root.findViewById(R.id.confirmpassword);
+        confirmPassword.setTextColor(getResources().getColor(R.color.Black));
         userName = (EditText) root.findViewById(R.id.userName);
+        userName.setTextColor(getResources().getColor(R.color.Black));
         branch = (Spinner) root.findViewById(R.id.branch);
         sem = (Spinner) root.findViewById(R.id.sem);
         signUp = (Button) root.findViewById(R.id.signup);
@@ -113,11 +119,7 @@ public class Login extends Fragment {
             if (Password.getText().toString().contentEquals(confirmPassword.getText().toString())) {
                 if (branch.getSelectedItemPosition() > 0 && sem.getSelectedItemPosition() > 0) {
 
-                    SharedPreferences preferences=getActivity().getSharedPreferences(MainActivity.PREF_FILE_NAME,Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor=preferences.edit();
-                    editor.putInt("branch",branch.getSelectedItemPosition());
-                    editor.putInt("sem",sem.getSelectedItemPosition());
-                    editor.apply();
+
                     uploder.run();
 
                 } else {
@@ -159,8 +161,12 @@ public class Login extends Fragment {
                         parseObject.put("usn", USN.getText().toString());
                         parseObject.put("password", Password.getText().toString());
                         parseObject.put("registration_id", getActivity().getSharedPreferences(MainActivity.PREF_FILE_NAME, Context.MODE_PRIVATE).getString(MainActivity.token, null));
+                        parseObject.put("branch",branch.getSelectedItemPosition());
+                        parseObject.put("sem",sem.getSelectedItemPosition());
                         parseObject.saveInBackground();
+                        saveDataLocally();
                         progressDialog.dismiss();
+
                         Toast.makeText(getActivity(), "saveSuccess", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), CardActivity.class);
                         startActivity(intent);
@@ -181,8 +187,9 @@ public class Login extends Fragment {
 
 
                         }
-                        if (userNameFlag && usnFlag)
-                        {both = true;}
+                        if (userNameFlag && usnFlag) {
+                            both = true;
+                        }
 
 
                         progressDialog.dismiss();
@@ -190,15 +197,15 @@ public class Login extends Fragment {
                         if (both) {
                             builder.setTitle("user name or usn  already in use ");
                             builder.setMessage("please check your USN and change username and try again");
-                            both=false;
+                            both = false;
                         } else if (userNameFlag) {
                             builder.setTitle("user name  already in use");
                             builder.setMessage("please  change username and try again");
-                            userNameFlag=false;
+                            userNameFlag = false;
                         } else if (usnFlag) {
                             builder.setTitle("usn already in use");
                             builder.setMessage("please check your USN try again");
-                            usnFlag=false;
+                            usnFlag = false;
                         }
                         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                             @Override
@@ -218,6 +225,24 @@ public class Login extends Fragment {
             }
         });
 
+    }
+
+    private void saveDataLocally() {
+        SharedPreferences saveData = getContext().getSharedPreferences(MainActivity.PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = saveData.edit();
+        editor.putString(Constents.NAME, userName.getText().toString());
+        editor.putString(Constents.USN, USN.getText().toString());
+        editor.putInt(Constents.BRANCH, branch.getSelectedItemPosition());
+        editor.putInt(Constents.SEM, sem.getSelectedItemPosition());
+        editor.putBoolean(Constents.LOGINSTATUS, true);
+        editor.apply();
+        //for(int i=0;i<2000;i++);
+        Intent intent=new Intent(getActivity(), TopicRegisterService.class);
+        Bundle bundle=new Bundle();
+        bundle.putInt(Constents.BRANCH, branch.getSelectedItemPosition());
+        bundle.putInt(Constents.SEM, sem.getSelectedItemPosition());
+        intent.putExtras(bundle);
+        getActivity().startService(intent);
     }
 
 

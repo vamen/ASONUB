@@ -18,6 +18,7 @@ public class CardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setTitle("SubjectCards");
         setSupportActionBar(toolbar);
         RecyclerView recyclerView= (RecyclerView) findViewById(R.id.recyclecard);
         RecyclerAdapter adapter=new RecyclerAdapter(getApplicationContext());

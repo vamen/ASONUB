@@ -24,12 +24,29 @@ public class myGcmListener extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         super.onMessageReceived(from, data);
+
+        Log.d("Message", data.get("message").toString());
+        if (from.startsWith("/topics/")) {
+            // message received from some topic.
+            String title=from.substring(8);
+            showNotification(title,data);
+            Log.d("message","topic msg received");
+        } else {
+            // normal downstream message.
+            String title="ASONUB";
+            Log.d("message","single msg received");
+            showNotification(title,data);
+        }
+    }
+
+    private void showNotification(String title,Bundle data) {
         NotificationCompat.Builder nBuilder=new NotificationCompat.Builder(this);
         nBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        nBuilder.setContentTitle("ASONUB");
+        nBuilder.setContentTitle(title);
         nBuilder.setContentText(data.getString("message"));
         NotificationManager manager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         manager.notify(mNotificationId,nBuilder.build());
-        Log.d("Message", data.get("message").toString());
+
     }
+
 }
